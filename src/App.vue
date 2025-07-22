@@ -1,6 +1,5 @@
 <template>
   <main>
-    <h1>Weather App</h1>
     <HomeView />
   </main>
 </template>

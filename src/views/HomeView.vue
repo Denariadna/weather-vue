@@ -1,6 +1,8 @@
 <template>
+  <h1>Weather App</h1>
   <SearchBar @search="handleSearch" />
-  <WeatherCard v-if="weather" :forecast="weather" :cityName="city?.name" />
+  <WeatherCard v-if="weather && city?.name"
+:forecast="weather" :key="city?.name" :city-name="city?.name" />
 </template>
 
 <script setup lang="ts">
@@ -9,9 +11,10 @@ import SearchBar from '@/components/SearchBar.vue';
 import WeatherCard from '@/components/WeatherCard.vue';
 import { searchLocation } from '@/composables/useGeocoding';
 import { getDailyForecast } from '@/composables/useWeather';
+import type { City, WeatherForecast } from '@/types/weather';
 
-const city = ref<any>(null);
-const weather = ref<any>(null);
+const city = ref<City | null>(null);
+const weather = ref<WeatherForecast | null>(null);
 
 async function handleSearch(name: string) {
   city.value = await searchLocation(name);

@@ -1,19 +1,69 @@
 <template>
-  <div>
-    <input v-model="query" placeholder="Enter city..." />
-    <button @click="onSearch">Search</button>
-  </div>
+  <form class="search-bar" @submit.prevent="handleSubmit">
+    <input v-model="searchQuery"
+type="text" placeholder="Enter city name" class="search-input"
+/>
+    <button type="submit"
+class="search-button"
+>
+Search
+</button>
+  </form>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
 
-const query = ref('');
-const emit = defineEmits(['search']);
+const emit = defineEmits<{
+  (e: 'search', value: string): void;
+}>();
 
-function onSearch() {
-  if (query.value.trim()) {
-    emit('search', query.value.trim());
+const searchQuery = ref('');
+
+function handleSubmit() {
+  if (searchQuery.value.trim()) {
+    emit('search', searchQuery.value.trim());
   }
 }
 </script>
+
+<style scoped>
+.search-bar {
+  display: flex;
+  width: 100%;
+  max-width: 500px;
+  gap: 0.5rem;
+  margin: auto;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.6rem 0.9rem;
+  font-size: 1rem;
+  border: 1px solid #444;
+  border-radius: 6px;
+  background-color: #2a2a2a;
+  color: #fff;
+  transition: border 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #00bcd4;
+}
+
+.search-button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  background-color: #00bcd4;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.search-button:hover {
+  background-color: #00acc1;
+}
+</style>
