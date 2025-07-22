@@ -1,10 +1,29 @@
-export async function getDailyForecast(lat: number, lon: number) {
-  const now = new Date();
-  const today = now.toISOString().split('T')[0];
-  const tomorrow = new Date(now.getTime() + 86400000).toISOString().split('T')[0];
+import type { WeatherForecast } from '@/types/weather';
+import { ref } from 'vue';
 
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m&start_date=${today}&end_date=${tomorrow}&timezone=auto`;
+export function getDailyForecast() {
+  const forecast = ref<WeatherForecast | null>(null);
+  const error = ref<string | null>(null);
 
-  const res = await fetch(url);
-  return await res.json();
+  async function fetchWeather(
+    latitude: number,
+    longitude: number
+  ): Promise<WeatherForecast | null> {
+    error.value = null;
+    try {
+      const response = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&timezone=auto`
+      );
+      if (!response.ok) throw new Error('Failed to fetch weather');
+      const data = await response.json();
+      forecast.value = data;
+      return data;
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Unexpected error';
+      forecast.value = null;
+      return null;
+    }
+  }
+
+  return { forecast, fetchWeather, error };
 }
