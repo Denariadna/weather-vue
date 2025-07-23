@@ -16,14 +16,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import SearchBar from '@/components/SearchBar.vue';
 import WeatherCard from '@/components/WeatherCard.vue';
 import { searchLocation } from '@/composables/useGeocoding';
 import { getDailyForecast } from '@/composables/useWeather';
 import type { City, WeatherForecast } from '@/types/weather';
+import { getCookie } from '@/composables/useCookie';
 
 const city = ref<City | null>(null);
+
+onMounted(async () => {
+  const savedCity = getCookie('last_city');
+  if (savedCity) {
+    await handleSearch(savedCity);
+  }
+});
+
 const forecast = ref<WeatherForecast | null>(null);
 const error = ref<string | null>(null);
 
@@ -42,11 +51,13 @@ async function handleSearch(name: string) {
     city.value = location;
 
     const data = await fetchWeather(location.latitude, location.longitude);
+    document.cookie = `last_city=${encodeURIComponent(name)}; max-age=${60 * 60 * 24 * 7}`;
     forecast.value = data;
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Unexpected error';
   }
 }
+
 </script>
 
 <style scoped>
