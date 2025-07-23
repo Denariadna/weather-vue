@@ -29,7 +29,13 @@ const city = ref<City | null>(null);
 onMounted(async () => {
   const savedCity = getCookie('last_city');
   if (savedCity) {
-    await handleSearch(savedCity);
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+
+    const startDate = today.toISOString().split('T')[0];
+
+    await handleSearch(savedCity, startDate);
   }
 });
 
@@ -38,7 +44,7 @@ const error = ref<string | null>(null);
 
 const { fetchWeather, isLoading } = getDailyForecast();
 
-async function handleSearch(name: string) {
+async function handleSearch(name: string, startDate: string) {
   error.value = null;
   forecast.value = null;
 
@@ -50,7 +56,7 @@ async function handleSearch(name: string) {
     }
     city.value = location;
 
-    const data = await fetchWeather(location.latitude, location.longitude);
+    const data = await fetchWeather(location.latitude, location.longitude, startDate );
     document.cookie = `last_city=${encodeURIComponent(name)}; max-age=${60 * 60 * 24 * 7}`;
     forecast.value = data;
   } catch (err) {

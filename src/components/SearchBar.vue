@@ -3,6 +3,11 @@
     <input v-model="searchQuery"
 type="text" placeholder="Enter city name" class="search-input"
 />
+    <input
+    v-model="startDate"
+    type="date"
+    class="date-input"
+  />
     <button type="submit"
 class="search-button"
 >
@@ -15,14 +20,15 @@ Search
 import { ref, defineEmits } from 'vue';
 
 const emit = defineEmits<{
-  (e: 'search', value: string): void;
+  (e: 'search', city: string, startDate: string): void;
 }>();
 
 const searchQuery = ref('');
+const startDate = ref('');
 
 function handleSubmit() {
-  if (searchQuery.value.trim()) {
-    emit('search', searchQuery.value.trim());
+  if (searchQuery.value.trim() && startDate.value) {
+    emit('search', searchQuery.value.trim(), startDate.value);
   }
 }
 </script>
@@ -65,5 +71,18 @@ function handleSubmit() {
 
 .search-button:hover {
   background-color: #00acc1;
+}
+
+.date-input {
+  padding: 0.6rem 0.9rem;
+  font-size: 1rem;
+  border: 1px solid #444;
+  border-radius: 6px;
+  background-color: #2a2a2a;
+  color: #fff;
+}
+
+.date-input:hover{
+  cursor: pointer;
 }
 </style>

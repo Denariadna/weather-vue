@@ -1,7 +1,7 @@
 <template>
   <div v-if="forecast" class="weather-card">
     <h2 class="city-name">
-      {{ cityName }}
+      {{ cityName }} — {{ formatDateToDMY(forecast.hourly.time[0]) }}
     </h2>
 
     <div class="chart-wrapper">
@@ -47,6 +47,14 @@ defineProps<{
   };
 }>();
 
+function formatDateToDMY(isoDate: string): string {
+  const date = new Date(isoDate);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // месяцы с 0
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`;
+}
+
 function formatToLocalTime(utcString: string): string {
   return new Date(utcString).toLocaleTimeString([], {
     hour: '2-digit',
@@ -61,8 +69,8 @@ function formatToLocalTime(utcString: string): string {
   border-radius: 12px;
   padding: 1.5rem;
   margin-top: 2rem;
-  width: 700px;
-  max-width: 700px;
+  width: 100%;
+  min-width: 700px;
   box-shadow: 0 0 15px rgba(0, 188, 212, 0.15);
 }
 
@@ -74,9 +82,17 @@ function formatToLocalTime(utcString: string): string {
   color: #ffffff;
 }
 
+.date {
+  display: block;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #aaa;
+  margin-top: 0.3rem;
+}
+
 .chart-wrapper {
   width: 100%;
-  max-width: 640px;
+  max-width: 700px;
   min-height: 300px;
   margin-bottom: 1.5rem;
   margin: auto;
@@ -104,4 +120,24 @@ function formatToLocalTime(utcString: string): string {
 .temp {
   font-weight: 500;
 }
+
+@media (max-width: 800px) {
+  .weather-card {
+    max-width: 400px;
+  }
+  .city-name {
+    font-size: 1.4rem;
+  }
+
+  .forecast-list li {
+    font-size: 0.9rem;
+    padding: 0.4rem 0;
+  }
+
+  .chart-wrapper{
+    max-width: 400px;
+    min-height: 200px;
+  }
+}
+
 </style>

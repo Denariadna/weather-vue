@@ -8,13 +8,20 @@ export function getDailyForecast() {
 
   async function fetchWeather(
     latitude: number,
-    longitude: number
+    longitude: number,
+    startDate: string
   ): Promise<WeatherForecast | null> {
     error.value = null;
     isLoading.value = true;
+
+    const start = new Date(startDate);
+    const end = new Date(start);
+    end.setDate(start.getDate() + 1);
+
+    const endDate = end.toISOString().split('T')[0];
     try {
       const response = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&timezone=auto`
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&start_date=${startDate}&end_date=${endDate}`
       );
       if (!response.ok) throw new Error('Failed to fetch weather');
       const data = await response.json();
