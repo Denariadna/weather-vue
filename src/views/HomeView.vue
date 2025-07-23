@@ -11,6 +11,7 @@
     />
 
     <p v-if="error" class="error">{{ error }}</p>
+    <p v-if="isLoading">Loading...</p>
   </div>
 </template>
 
@@ -26,7 +27,7 @@ const city = ref<City | null>(null);
 const forecast = ref<WeatherForecast | null>(null);
 const error = ref<string | null>(null);
 
-const { fetchWeather } = getDailyForecast();
+const { fetchWeather, isLoading } = getDailyForecast();
 
 async function handleSearch(name: string) {
   error.value = null;
