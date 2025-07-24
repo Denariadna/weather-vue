@@ -1,9 +1,11 @@
 <template>
   <div v-if="forecast" class="weather-card">
     <h2 class="city-name">
-      {{ cityName }} — {{ formatDateToDMY(forecast.hourly.time[0]) }}
+      {{ cityName }}
     </h2>
-
+    <h3 class="city-date">
+      {{ formatDateToDMY(forecast.hourly.time[0]) }}
+    </h3>
     <div class="chart-wrapper">
       <ForecastChart
         :labels="forecast.hourly.time.slice(0, 24).map(formatToLocalTime)"
@@ -69,9 +71,10 @@ function formatToLocalTime(utcString: string): string {
   border-radius: 12px;
   padding: 1.5rem;
   margin-top: 2rem;
-  width: 100%;
-  min-width: 700px;
+  width: 90%;
+  min-width: 600px;
   box-shadow: 0 0 15px rgba(0, 188, 212, 0.15);
+  margin: auto;
 }
 
 .city-name {
@@ -91,7 +94,7 @@ function formatToLocalTime(utcString: string): string {
 }
 
 .chart-wrapper {
-  width: 100%;
+  width: 70%;
   max-width: 700px;
   min-height: 300px;
   margin-bottom: 1.5rem;
@@ -127,6 +130,10 @@ function formatToLocalTime(utcString: string): string {
   }
   .city-name {
     font-size: 1.4rem;
+  }
+
+  .city-date{
+    font-size: 1.2rem;
   }
 
   .forecast-list li {

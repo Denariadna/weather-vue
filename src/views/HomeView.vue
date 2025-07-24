@@ -29,20 +29,13 @@ const city = ref<City | null>(null);
 onMounted(async () => {
   const savedCity = getCookie('last_city');
   if (savedCity) {
-    const today = new Date();
-    const tomorrow = new Date();
-    tomorrow.setDate(today.getDate() + 1);
-
-    const startDate = today.toISOString().split('T')[0];
-
-    await handleSearch(savedCity, startDate);
+    const today = new Date().toISOString().split('T')[0];
+    await handleSearch(savedCity, today);
   }
 });
 
 const forecast = ref<WeatherForecast | null>(null);
-const error = ref<string | null>(null);
-
-const { fetchWeather, isLoading } = getDailyForecast();
+const { fetchWeather, isLoading, error } = getDailyForecast();
 
 async function handleSearch(name: string, startDate: string) {
   error.value = null;
@@ -69,15 +62,22 @@ async function handleSearch(name: string, startDate: string) {
 <style scoped>
 .app-container {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
   margin-top: 50px;
+  min-width: 800px;
   color: white;
 }
+
 .title {
   font-size: 3rem;
   margin-bottom: 20px;
 }
+
 .error {
   margin-top: 20px;
   color: red;
+  font-weight: bold;
 }
 </style>

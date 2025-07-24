@@ -20,7 +20,7 @@ Search
 import { ref, defineEmits } from 'vue';
 
 const emit = defineEmits<{
-  (e: 'search', city: string, startDate: string): void;
+  (e: 'search', searchQuery: string, startDate: string): void;
 }>();
 
 const searchQuery = ref('');

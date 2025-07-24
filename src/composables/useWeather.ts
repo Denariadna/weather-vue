@@ -23,8 +23,8 @@ export function getDailyForecast() {
       const response = await fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&start_date=${startDate}&end_date=${endDate}`
       );
-      if (!response.ok) throw new Error('Failed to fetch weather');
       const data = await response.json();
+      if (!response.ok) throw new Error(data.reason || 'Failed to fetch weather');
       forecast.value = data;
       return data;
     } catch (err) {
